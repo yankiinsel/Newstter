@@ -1,4 +1,4 @@
-# yanki-swe573
+# TwitterNews
 This is an automatised newsfeed combining both social media and other media agents, by searching trending twitter topics on the web for any news.
 
 There are several drawbacks for both social media and other media institutions. For social media, there is the probability of a post not being true. As for the latter, most news organizations are not neutral anymore. Thus the news we read can be biased from time to time. The purpose of the project is to eliminating all the drawbacks by uniting all the aspects. Agenda is chosen by the social media, trending topics, and any source of news covering that topic will show up. Readers are disposed to several sources, and will be able to analyze the news.
