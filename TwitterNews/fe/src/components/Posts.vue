@@ -1,6 +1,6 @@
 <template>
   <div class="posts">
-    <p>{{ posts }}</p>
+    <p>{{ topics }}</p>
   </div>
 </template>
 
@@ -12,6 +12,8 @@ export default {
   data() {
     return {
       posts: [],
+      woeids: [],
+      topics: [],
     };
   },
   async created() {
@@ -25,10 +27,23 @@ export default {
           woeid: place.woeid,
           countryCode: place.countryCode,
         });
+        if (place.parentid === 23424775 && !this.woeids.includes(place.woeid)) {
+          this.woeids.push(place.woeid);
+        }
       });
-      this.posts = res.data;
+      // this.posts = res.data;
     }).catch((err) => {
       this.posts = [err];
+    });
+    this.woeids.forEach((woeid) => {
+      axios.get(`http://localhost:3001/trends/place/${woeid}`)
+        .then((res) => {
+          res.data.forEach((topic) => {
+            if (!this.topics.includes(topic.trends[0].name)) {
+              this.topics.push(topic.trends[0].name);
+            }
+          });
+        });
     });
   },
 };
