@@ -1,15 +1,19 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Posts from '@/components/Posts';
+import Map from '@/components/Map';
 
 Vue.use(Router);
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'Posts',
-      component: Posts,
-    },
-  ],
+const routes = [{
+  path: '/',
+  name: 'Map',
+  component: Map,
+}];
+
+const router = new Router({
+  mode: 'history',
+  base: __dirname,
+  routes,
 });
+
+export default router;

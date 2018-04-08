@@ -1,6 +1,8 @@
 <template>
-  <div class="posts">
-    <p>{{ topics }}</p>
+  <div id="posts">
+    <div class="posts">
+      <p>{{ topics }}</p>
+    </div>
   </div>
 </template>
 
@@ -8,7 +10,7 @@
 import axios from 'axios';
 
 export default {
-  name: 'Posts',
+  name: 'Map',
   data() {
     return {
       posts: [],
@@ -50,19 +52,37 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
+<style lang = "scss">
+
+
+#posts {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  // mobile
+  grid-template: 1fr 100px / 1fr;
+
+  grid-template-areas:
+    "results"
+    "link";
+
+  // tablet + small deskt0p
+  @media (min-width: 769px) {
+    grid-template: 1fr 100px / 1fr 769px 1fr;
+    grid-template-areas:
+      ".  results ."
+      ".  link    .";
+  }
+
+  // large deskt0p
+  @media (min-width: 1240px) {
+    grid-template: 1fr 100px / 1fr 1240px 1fr;
+    grid-template-areas:
+      ".  results ."
+      ".  link    .";
+  }
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>
