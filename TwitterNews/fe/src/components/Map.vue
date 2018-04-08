@@ -67,8 +67,6 @@ export default {
     },
 
     async getWoeids() {
-      console.log('happy1');
-
       const woeids = [];
       for (let i = 0, len = this.posts.length; i < len; i += 1) {
         const place = this.posts[i];
@@ -76,15 +74,10 @@ export default {
           woeids.push(place.woeid);
         }
       }
-      console.log('happy2');
-      console.log(woeids);
       this.woeids = woeids;
-      console.log(this.woeids);
     },
 
     async getTopics() {
-      console.log('happy3');
-      console.log(this.woeids);
       const topics = [];
       for (let i = 0, len = this.woeids.length; i < len; i += 1) {
         const woeid = this.woeids[i];
@@ -95,9 +88,6 @@ export default {
                 topics.push(topic.trends[0].name);
               }
             });
-
-            console.log('happy4');
-
             this.topics = topics;
           });
       }
