@@ -4,10 +4,10 @@
     <div class="topics">
 
       <div class="buttons">
-        <input type="radio" id="one" value=23424969 v-model="picked" v-on:click="update">
+        <input type="radio" id="one" value=23424969 v-model="picked">
         <label for="one">Turkey</label>
         <br>
-        <input type="radio" id="two" value=23424775 v-model="picked" v-on:click="update">
+        <input type="radio" id="two" value=23424775 v-model="picked">
         <label for="two">Canada</label>
         <br>
         <span>Picked: {{ picked }}</span>
@@ -35,6 +35,15 @@ export default {
     };
   },
 
+  watch: {
+    /* eslint-disable */
+    picked: function() {
+      this.getWoeids();
+      this.getTopics();
+    },
+    /* eslint-enable */
+  },
+
   async created() {
     await this.getAvailablePlaces();
     this.getWoeids();
@@ -42,11 +51,6 @@ export default {
   },
 
   methods: {
-
-    update() {
-      this.getWoeids();
-      this.getTopics();
-    },
 
     async getAvailablePlaces() {
       this.posts = [];
@@ -66,18 +70,18 @@ export default {
       });
     },
 
-    async getWoeids() {
+    getWoeids() {
       const woeids = [];
       for (let i = 0, len = this.posts.length; i < len; i += 1) {
-        const place = this.posts[i];
-        if (place.parentid === this.picked && !this.woeids.includes(place.woeid)) {
-          woeids.push(place.woeid);
+        const post = this.posts[i];
+        if (post.parentid === parseInt(this.picked, 10) && !woeids.includes(post.woeid)) {
+          woeids.push(post.woeid);
         }
       }
       this.woeids = woeids;
     },
 
-    async getTopics() {
+    getTopics() {
       const topics = [];
       for (let i = 0, len = this.woeids.length; i < len; i += 1) {
         const woeid = this.woeids[i];
@@ -89,6 +93,9 @@ export default {
               }
             });
             this.topics = topics;
+          })
+          .catch((err) => {
+            this.topics = [err];
           });
       }
     },
