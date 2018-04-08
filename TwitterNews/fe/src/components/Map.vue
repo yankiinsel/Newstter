@@ -1,7 +1,22 @@
 <template>
-  <div id="posts">
-    <div class="posts">
-      <p>{{ topics }}</p>
+  <div id="map">
+
+    <div class="topics">
+
+      <div class="buttons">
+        <input type="radio" id="one" value=23424969 v-model="picked" v-on:click="update">
+        <label for="one">Turkey</label>
+        <br>
+        <input type="radio" id="two" value=23424775 v-model="picked" v-on:click="update">
+        <label for="two">Canada</label>
+        <br>
+        <span>Picked: {{ picked }}</span>
+      </div>
+
+      <p class="trending">{{ topics }}</p>
+
+      <p class="posts">{{ posts }}</p>
+
     </div>
   </div>
 </template>
@@ -16,73 +31,120 @@ export default {
       posts: [],
       woeids: [],
       topics: [],
+      picked: 23424775,
     };
   },
+
   async created() {
-    await axios.get('http://localhost:3001/trends/available').then((res) => {
-      res.data.forEach((place) => {
-        this.posts.push({
-          name: place.name,
-          url: place.url,
-          parentid: place.parentid,
-          country: place.country,
-          woeid: place.woeid,
-          countryCode: place.countryCode,
-        });
-        if (place.parentid === 23424775 && !this.woeids.includes(place.woeid)) {
-          this.woeids.push(place.woeid);
-        }
-      });
-      // this.posts = res.data;
-    }).catch((err) => {
-      this.posts = [err];
-    });
-    this.woeids.forEach((woeid) => {
-      axios.get(`http://localhost:3001/trends/place/${woeid}`)
-        .then((res) => {
-          res.data.forEach((topic) => {
-            if (!this.topics.includes(topic.trends[0].name)) {
-              this.topics.push(topic.trends[0].name);
-            }
+    await this.getAvailablePlaces();
+    this.getWoeids();
+    this.getTopics();
+  },
+
+  methods: {
+
+    update() {
+      this.getWoeids();
+      this.getTopics();
+    },
+
+    async getAvailablePlaces() {
+      this.posts = [];
+      await axios.get('http://localhost:3001/trends/available').then((res) => {
+        res.data.forEach((place) => {
+          this.posts.push({
+            name: place.name,
+            url: place.url,
+            parentid: place.parentid,
+            country: place.country,
+            woeid: place.woeid,
+            countryCode: place.countryCode,
           });
         });
-    });
+      }).catch((err) => {
+        this.posts = [err];
+      });
+    },
+
+    async getWoeids() {
+      console.log('happy1');
+
+      const woeids = [];
+      for (let i = 0, len = this.posts.length; i < len; i += 1) {
+        const place = this.posts[i];
+        if (place.parentid === this.picked && !this.woeids.includes(place.woeid)) {
+          woeids.push(place.woeid);
+        }
+      }
+      console.log('happy2');
+      console.log(woeids);
+      this.woeids = woeids;
+      console.log(this.woeids);
+    },
+
+    async getTopics() {
+      console.log('happy3');
+      console.log(this.woeids);
+      const topics = [];
+      for (let i = 0, len = this.woeids.length; i < len; i += 1) {
+        const woeid = this.woeids[i];
+        axios.get(`http://localhost:3001/trends/place/${woeid}`)
+          .then((res) => {
+            res.data.forEach((topic) => {
+              if (!topics.includes(topic.trends[0].name)) {
+                topics.push(topic.trends[0].name);
+              }
+            });
+
+            console.log('happy4');
+
+            this.topics = topics;
+          });
+      }
+    },
   },
 };
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang = "scss">
 
 
-#posts {
+#map {
   display: grid;
   width: 100%;
   height: 100%;
   justify-content: center;
   align-items: center;
-  // mobile
-  grid-template: 1fr 100px / 1fr;
 
+  grid-template: 1fr / 1fr 80% 1fr;
   grid-template-areas:
-    "results"
-    "link";
+    ".  topics .";
 
-  // tablet + small deskt0p
-  @media (min-width: 769px) {
-    grid-template: 1fr 100px / 1fr 769px 1fr;
-    grid-template-areas:
-      ".  results ."
-      ".  link    .";
-  }
+}
 
-  // large deskt0p
-  @media (min-width: 1240px) {
-    grid-template: 1fr 100px / 1fr 1240px 1fr;
-    grid-template-areas:
-      ".  results ."
-      ".  link    .";
-  }
+.topics {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-area: topics;
+  grid-template:  " buttons " 100px
+                  " trending  " 200px
+                  " posts   " 1fr
+                  / 1fr
+
+}
+.trending {
+  grid-area: trending;
+}
+
+.buttons {
+  grid-area: buttons;
+}
+
+.posts {
+  grid-area: posts;
 }
 
 </style>
