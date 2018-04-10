@@ -35,7 +35,7 @@ function getData(req, callbackData) {
     };
 
     let bing_news_search = function (search) {
-        let options = '&en-ca'
+        let options = '&mkt=en-ca'
         let request_params = {
             method: 'GET',
             hostname: newsClient.host,
