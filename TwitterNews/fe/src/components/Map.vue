@@ -13,9 +13,19 @@
         <span>Picked: {{ picked }}</span>
       </div>
 
-      <p class="trending">{{ topics }}</p>
+      <ul id="trending">
+        <li v-for="topic in topics" :key="topic">
+          <a v-on:click="getNews(topic)">{{ topic }}</a>
+          <br>
+        </li>
+      </ul>
 
-      <p class="posts">{{ posts }}</p>
+      <ul id="news">
+        <li v-for="newItem in news" :key="newItem">
+          <p> {{ newItem }} </p>
+          <br>
+        </li>
+      </ul>
 
     </div>
   </div>
@@ -31,15 +41,17 @@ export default {
       posts: [],
       woeids: [],
       topics: [],
+      news: [],
+      selectedTopic: '',
       picked: 23424775,
     };
   },
 
   watch: {
     /* eslint-disable */
-    picked: function() {
+    picked: async function() {
       this.getWoeids();
-      this.getTopics();
+      await this.getTopics();
     },
     /* eslint-enable */
   },
@@ -47,14 +59,14 @@ export default {
   async created() {
     await this.getAvailablePlaces();
     this.getWoeids();
-    this.getTopics();
+    await this.getTopics();
   },
 
   methods: {
 
     async getAvailablePlaces() {
       this.posts = [];
-      await axios.get('http://localhost:3001/trends/available').then((res) => {
+      await axios.get('http://localhost:3001/map').then((res) => {
         res.data.forEach((place) => {
           this.posts.push({
             name: place.name,
@@ -81,23 +93,47 @@ export default {
       this.woeids = woeids;
     },
 
-    getTopics() {
+    async searchTopics(woeid) {
       const topics = [];
-      for (let i = 0, len = this.woeids.length; i < len; i += 1) {
-        const woeid = this.woeids[i];
-        axios.get(`http://localhost:3001/trends/place/${woeid}`)
-          .then((res) => {
-            res.data.forEach((topic) => {
-              if (!topics.includes(topic.trends[0].name)) {
-                topics.push(topic.trends[0].name);
+
+      await axios.get(`http://localhost:3001/topics/${woeid}`)
+        .then((res) => {
+          res.data.forEach((place) => {
+            for (let i = 0, len = place.trends.length; i < len; i += 1) {
+              if (!topics.includes(place.trends[i].name)) {
+                topics.push(place.trends[i].name);
               }
-            });
+            }
             this.topics = topics;
-          })
-          .catch((err) => {
-            this.topics = [err];
           });
-      }
+        })
+        .catch((err) => {
+          this.topics = [err];
+        });
+    },
+
+    async getTopics() {
+      this.topics = [];
+      const promises = this.woeids.map(this.searchTopics);
+      await Promise.all(promises);
+    },
+
+    getNews(topic) {
+      this.news = [];
+      const term = topic
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/#/g, '')
+        .toLowerCase();
+      console.log('Searched for: '.concat(term));
+      axios.get(`http://localhost:3001/news/${term}`).then((res) => {
+        const news = res.data.value;
+        console.log('Found items: '.concat(news.length));
+        news.forEach((newsItem) => {
+          this.news.push(newsItem.name);
+        });
+      }).catch((err) => {
+        console.log(err);
+      });
     },
   },
 };
@@ -127,8 +163,8 @@ export default {
   align-items: center;
   grid-area: topics;
   grid-template:  " buttons " 100px
-                  " trending  " 200px
-                  " posts   " 1fr
+                  " trending  " auto
+                  " news   " auto
                   / 1fr
 
 }
@@ -140,8 +176,8 @@ export default {
   grid-area: buttons;
 }
 
-.posts {
-  grid-area: posts;
+.news {
+  grid-area: news;
 }
 
 </style>
