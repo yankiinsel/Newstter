@@ -13,16 +13,23 @@
         <span>Picked: {{ picked }}</span>
       </div>
 
-      <ul id="trending">
+      <ul class="trending">
         <li v-for="topic in topics" :key="topic">
           <a v-on:click="getNews(topic)">{{ topic }}</a>
           <br>
         </li>
       </ul>
 
-      <ul id="news">
-        <li v-for="newItem in news" :key="newItem">
-          <p> {{ newItem }} </p>
+      <ul class="news">
+        <li class="newsCell" v-for="newItem in news" :key="newItem">
+          <p class="title"> {{ newItem.name }} </p>
+          <p class="description"> {{ newItem.description }} </p>
+          <div>
+            <img v-if="newItem.image !== undefined"
+                :src="newItem.image.thumbnail.contentUrl"
+                :alt="newItem.name"
+                class="thumbnail">
+          </div>
           <br>
         </li>
       </ul>
@@ -129,7 +136,7 @@ export default {
         const news = res.data.value;
         console.log('Found items: '.concat(news.length));
         news.forEach((newsItem) => {
-          this.news.push(newsItem.name);
+          this.news.push(newsItem);
         });
       }).catch((err) => {
         console.log(err);
@@ -153,8 +160,7 @@ export default {
 
   grid-template: 1fr / 1fr 80% 1fr;
   grid-template-areas:
-    ".  topics .";
-
+    ".  topics ."
 }
 
 .topics {
@@ -162,9 +168,9 @@ export default {
   justify-content: center;
   align-items: center;
   grid-area: topics;
-  grid-template:  " buttons " 100px
+  grid-template:  " buttons   " 100px
                   " trending  " auto
-                  " news   " auto
+                  " news      " auto
                   / 1fr
 
 }
@@ -177,7 +183,33 @@ export default {
 }
 
 .news {
+  display: grid;
   grid-area: news;
+  grid-auto-rows: 200px;
+  grid-gap: 20px;
+}
+
+.newsCell {
+  display: grid;
+  grid-template: " thumbnail  title       " 50px
+                 " thumbnail  description " 150px
+                 / 200px      1fr
+}
+
+.thumbnail {
+  grid-area: thumbnail;
+}
+
+img {
+   object-fit: fill;
+}
+
+.title {
+  grid-area: title;
+}
+
+.description {
+  grid-area: description;
 }
 
 </style>

@@ -13,4 +13,5 @@ module.exports = (app) => {
 
     app.route('/news/:term')
         .get(newsController.getNews)
+        
 };

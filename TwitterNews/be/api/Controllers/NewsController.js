@@ -1,15 +1,8 @@
+const config = require('../config');
 
 function getData(req, callbackData) {
 
     const https = require('https');
-
-    const newsClient = {
-        host: 'api.cognitive.microsoft.com',
-        path: '/bing/v7.0/news/search',
-        subscriptionKey: '6060d2f256784f3d89addff2a4d16b3a',
-        key2: '4ae060fb3d4945f8a5ab36e2c1768787',
-    }
-
 
     let response_handler = function (response) {
 
@@ -35,13 +28,13 @@ function getData(req, callbackData) {
     };
 
     let bing_news_search = function (search) {
-        let options = '&mkt=en-ca'
+        let options = '&mkt=tr-tr'
         let request_params = {
             method: 'GET',
-            hostname: newsClient.host,
-            path: newsClient.path + '?q=' + encodeURIComponent(search) + options,
+            hostname: config.newsClient.host,
+            path: config.newsClient.path + '?q=' + encodeURIComponent(search) + options,
             headers: {
-                'Ocp-Apim-Subscription-Key': newsClient.subscriptionKey,
+                'Ocp-Apim-Subscription-Key': config.newsClient.subscriptionKey,
             }
         };
 
