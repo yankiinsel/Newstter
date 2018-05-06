@@ -13,6 +13,11 @@
         <span>Picked: {{ picked }}</span>
       </div>
 
+      <div class="ammap">
+        <div id="mapdiv" style="width: 1000px; height: 450px;"></div>
+        <div style="width: 1000px; font-size: 70%; padding: 5px 0; text-align: center; background-color: #535364; margin-top: 1px; color: #B4B4B7;"><a href="https://www.amcharts.com/visited_countries/" style="color: #B4B4B7;">Create your own visited countries map</a> or check out the <a href="https://www.amcharts.com/" style="color: #B4B4B7;">JavaScript Charts</a>.</div>
+      </div>
+
       <ul class="trending">
         <li v-for="topic in topics" :key="topic">
           <a v-on:click="getNews(topic)">{{ topic }}</a>
@@ -39,6 +44,13 @@
 </template>
 
 <script>
+import 'amcharts3';
+import 'amcharts3/amcharts/plugins/responsive/responsive';
+import 'amcharts3/amcharts/serial';
+import 'amcharts3/amcharts/themes/light';
+import 'ammap3';
+import 'ammap3/ammap/maps/js/worldLow';
+
 import axios from 'axios';
 
 export default {
@@ -67,9 +79,37 @@ export default {
     await this.getAvailablePlaces();
     this.getWoeids();
     await this.getTopics();
+    this.drawMap();
   },
 
   methods: {
+
+    drawMap() {
+      /* global AmCharts */
+      AmCharts.theme = AmCharts.themes.light;
+
+      // build map
+      const map = new AmCharts.AmMap();
+
+      map.type = 'map';
+      map.theme = 'light';
+      map.projection = 'miller';
+
+      map.dataProvider = {
+        map: 'worldLow',
+        getAreasFromMap: true,
+      };
+      map.areasSettings = {
+        autoZoom: true,
+        selectedColor: '#C0000',
+      };
+      map.smallMap = {};
+      map.export = {
+        enabled: true,
+        position: 'bottom right',
+      };
+      map.write('mapdiv');
+    },
 
     async getAvailablePlaces() {
       this.posts = [];
@@ -148,8 +188,8 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang = "scss">
 
+<style lang = "scss">
 
 #map {
   display: grid;
@@ -169,6 +209,7 @@ export default {
   align-items: center;
   grid-area: topics;
   grid-template:  " buttons   " 100px
+                  " ammap     " auto
                   " trending  " auto
                   " news      " auto
                   / 1fr
@@ -176,6 +217,12 @@ export default {
 }
 .trending {
   grid-area: trending;
+}
+
+.ammap {
+  width: 100%;
+  height: 500px;
+  grid-area: ammap;
 }
 
 .buttons {
