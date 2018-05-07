@@ -3,16 +3,6 @@
 
     <div class="topics">
 
-      <div class="buttons">
-        <input type="radio" id="one" value=23424969 v-model="picked">
-        <label for="one">Turkey</label>
-        <br>
-        <input type="radio" id="two" value=23424775 v-model="picked">
-        <label for="two">Canada</label>
-        <br>
-        <span>Picked: {{ picked }}</span>
-      </div>
-
       <div class="ammap">
         <div id="mapdiv" style="width: 1000px; height: 450px;"></div>
         <div style="width: 1000px; font-size: 70%; padding: 5px 0; text-align: center; background-color: #535364; margin-top: 1px; color: #B4B4B7;"><a href="https://www.amcharts.com/visited_countries/" style="color: #B4B4B7;">Create your own visited countries map</a> or check out the <a href="https://www.amcharts.com/" style="color: #B4B4B7;">JavaScript Charts</a>.</div>
@@ -63,6 +53,8 @@ export default {
       news: [],
       selectedTopic: '',
       picked: 23424775,
+      map: '',
+      selected: [],
     };
   },
 
@@ -72,6 +64,16 @@ export default {
       this.getWoeids();
       await this.getTopics();
     },
+
+    selected: function() {
+      console.log(this.selected);
+      const el = this.selected[0]
+      if (el === 'TR') {
+        this.picked = 23424969
+      } else if (el === 'CA') {
+        this.picked = 23424775
+      }
+    }
     /* eslint-enable */
   },
 
@@ -86,29 +88,64 @@ export default {
 
     drawMap() {
       /* global AmCharts */
-      AmCharts.theme = AmCharts.themes.light;
+      AmCharts.theme = AmCharts.themes.dark;
 
       // build map
       const map = new AmCharts.AmMap();
-
-      map.type = 'map';
-      map.theme = 'light';
-      map.projection = 'miller';
-
-      map.dataProvider = {
+      this.map = map;
+      this.map.type = 'map';
+      this.map.theme = 'dark';
+      this.map.projection = 'miller';
+      this.map.color = 'white';
+      this.map.dataProvider = {
         map: 'worldLow',
         getAreasFromMap: true,
       };
-      map.areasSettings = {
-        autoZoom: true,
-        selectedColor: '#C0000',
+      this.map.areasSettings = {
+        autoZoom: false,
+        selectedColor: '#AAEE66',
+        selectable: true,
+        color: '#fff',
+        outlineColor: '#30303d',
+        outlineAlpha: 0.2,
       };
-      map.smallMap = {};
-      map.export = {
+      this.map.zoomControl = {
+        zoomControlEnabled: true,
+      };
+      this.map.listeners = [{
+        event: 'clickMapObject',
+        method: (e) => {
+          // Ignore any click not on area
+          if (e.mapObject.objectType !== 'MapArea') {
+            return;
+          }
+          const area = e.mapObject;
+          // Toggle showAsSelected
+          // for (let i = 0; i < this.map.dataProvider.areas.length; i += 1) {
+          //   this.map.dataProvider.areas[i].showAsSelected = false;
+          // }
+          // area.showAsSelected = true;
+          area.showAsSelected = !area.showAsSelected;
+          e.chart.returnInitialColor(area);
+          // Update the list
+          this.selected = this.getSelectedCountries();
+        },
+      }];
+      this.map.export = {
         enabled: true,
         position: 'bottom right',
       };
-      map.write('mapdiv');
+      this.map.write('mapdiv');
+    },
+
+    getSelectedCountries() {
+      const selected = [];
+      for (let i = 0; i < this.map.dataProvider.areas.length; i += 1) {
+        if (this.map.dataProvider.areas[i].showAsSelected) {
+          selected.push(this.map.dataProvider.areas[i].id);
+        }
+      }
+      return selected;
     },
 
     async getAvailablePlaces() {
@@ -208,8 +245,7 @@ export default {
   justify-content: center;
   align-items: center;
   grid-area: topics;
-  grid-template:  " buttons   " 100px
-                  " ammap     " auto
+  grid-template:  " ammap     " auto
                   " trending  " auto
                   " news      " auto
                   / 1fr
@@ -219,14 +255,10 @@ export default {
   grid-area: trending;
 }
 
-.ammap {
-  width: 100%;
-  height: 500px;
+#mapdiv {
+  background-color: #30303d;
+  color: #fff;
   grid-area: ammap;
-}
-
-.buttons {
-  grid-area: buttons;
 }
 
 .news {
