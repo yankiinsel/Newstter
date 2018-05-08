@@ -17,13 +17,12 @@
 
       <ul class="news">
         <li class="newsCell" v-for="newItem in news" :key="newItem">
-          <p class="title"> {{ newItem.name }} </p>
+          <a :href="newItem.url" class="title"> {{ newItem.name }} </a>
           <p class="description"> {{ newItem.description }} </p>
-          <div>
+          <div class="thumbnail">
             <img v-if="newItem.image !== undefined"
                 :src="newItem.image.thumbnail.contentUrl"
-                :alt="newItem.name"
-                class="thumbnail">
+                :alt="newItem.name">
           </div>
           <br>
         </li>
@@ -52,7 +51,7 @@ export default {
       topics: [],
       news: [],
       selectedTopic: '',
-      picked: 23424775,
+      picked: { id: 23424969, code: 'tr-tr' },
       map: '',
       selected: [],
     };
@@ -69,9 +68,9 @@ export default {
       console.log(this.selected);
       const el = this.selected[0]
       if (el === 'TR') {
-        this.picked = 23424969
+        this.picked = {id: 23424969, code: 'tr-tr'}
       } else if (el === 'CA') {
-        this.picked = 23424775
+        this.picked = {id: 23424775, code: 'en-ca'}
       }
     }
     /* eslint-enable */
@@ -170,7 +169,7 @@ export default {
       const woeids = [];
       for (let i = 0, len = this.posts.length; i < len; i += 1) {
         const post = this.posts[i];
-        if (post.parentid === parseInt(this.picked, 10) && !woeids.includes(post.woeid)) {
+        if (post.parentid === parseInt(this.picked.id, 10) && !woeids.includes(post.woeid)) {
           woeids.push(post.woeid);
         }
       }
@@ -209,7 +208,7 @@ export default {
         .replace(/#/g, '')
         .toLowerCase();
       console.log('Searched for: '.concat(term));
-      axios.get(`http://localhost:3001/news/${term}`).then((res) => {
+      axios.get(`http://localhost:3001/news/${term}/${this.picked.code}`).then((res) => {
         const news = res.data.value;
         console.log('Found items: '.concat(news.length));
         news.forEach((newsItem) => {
@@ -266,21 +265,33 @@ export default {
   grid-area: news;
   grid-auto-rows: 200px;
   grid-gap: 20px;
+  border-top: 1px solid green;
+
 }
+
+ul.news li { padding: 0px;   border-bottom: 1px solid green;
+}
+
+ul.news li a { margin: 24px; display: block; width: 100%; height: 100%; }
 
 .newsCell {
   display: grid;
-  grid-template: " thumbnail  title       " 50px
-                 " thumbnail  description " 150px
-                 / 200px      1fr
+  grid-template: " thumbnail  title       " 48px
+                 " thumbnail  description " 128px
+                 / 176px      1fr;
+  text-align: left;
 }
 
 .thumbnail {
   grid-area: thumbnail;
-}
+  overflow:hidden;
+  object-fit: cover;
+ }
 
-img {
-   object-fit: fill;
+.thumbnail img {
+  width: 128px;
+  height: auto;
+  margin: 24px;
 }
 
 .title {

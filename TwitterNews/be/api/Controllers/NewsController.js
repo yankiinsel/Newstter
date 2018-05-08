@@ -27,8 +27,8 @@ function getData(req, callbackData) {
 
     };
 
-    let bing_news_search = function (search) {
-        let options = '&mkt=tr-tr'
+    let bing_news_search = function (search, country) {
+        let options = `&mkt=${country}`;
         let request_params = {
             method: 'GET',
             hostname: config.newsClient.host,
@@ -43,7 +43,7 @@ function getData(req, callbackData) {
 
     }
 
-    bing_news_search(req.params.term);
+    bing_news_search(req.params.term, req.params.country);
 }
 
 exports.getNews = (req, res) => {
