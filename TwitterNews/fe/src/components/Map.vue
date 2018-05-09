@@ -10,7 +10,16 @@
 
       <ul class="trending">
         <li v-for="topic in topics" :key="topic">
-          <a v-on:click="getNews(topic)">{{ topic }}</a>
+          <a v-on:click="getNews(topic)"
+          v-scroll-to="{
+            container: '#news',
+            duration: 500,
+            easing: 'linear',
+            offset: -200,
+            cancelable: true,
+            x: false,
+            y: true
+          }">{{ topic }}</a>
           <br>
         </li>
       </ul>
@@ -51,7 +60,7 @@ export default {
       topics: [],
       news: [],
       selectedTopic: '',
-      picked: { id: 23424969, code: 'tr-tr' },
+      picked: { id: 0, code: 'en-us' },
       map: '',
       selected: [],
     };
@@ -67,10 +76,32 @@ export default {
     selected: function() {
       console.log(this.selected);
       const el = this.selected[0]
-      if (el === 'TR') {
+      if (el === 'TR') {//turkey
         this.picked = {id: 23424969, code: 'tr-tr'}
-      } else if (el === 'CA') {
+      } else if (el === 'CA') {//canada
         this.picked = {id: 23424775, code: 'en-ca'}
+      } else if (el === 'US') {//usa
+        this.picked = {id: 23424775, code: 'en-us'}
+      }  else if (el === 'World') {//worldwide
+        this.picked = {id: 0, code: 'en-us'}
+      } else if (el === 'GB') {//great britain
+        this.picked = {id: 23424975, code: 'en-gb'}
+      } else if (el === 'MX') {//mexico
+        this.picked = {id: 23424900, code: 'en-mx'}
+      } else if (el === 'IE') {//ireland
+        this.picked = {id: 23424803, code: 'en-ie'}
+      } else if (el === 'FR') {//france
+        this.picked = {id: 23424819, code: 'fr-fr'}
+      } else if (el === 'DE') {//germany
+        this.picked = {id: 23424829, code: 'de-de'}
+      } else if (el === 'IT') {//ialy
+        this.picked = {id: 23424829, code: 'it-it'}
+      } else if (el === 'NL') {//netherlands
+        this.picked = {id: 23424829, code: 'nl-nl'}
+      } else if (el === 'ES') {//spain
+        this.picked = {id: 23424950, code: 'es-es'}
+      } else if (el === 'RU') {//russia
+        this.picked = {id: 23424936, code: 'ru-ru'}
       }
     }
     /* eslint-enable */
@@ -84,6 +115,10 @@ export default {
   },
 
   methods: {
+
+    clearNews() {
+      this.news = [];
+    },
 
     drawMap() {
       /* global AmCharts */
