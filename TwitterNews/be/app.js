@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const PORT = process.env.PORT || 3001;
+const PORT = 3001;
 const routes = require('./api/routes/index.js'); // Importing route definitions
 
 const app = express();

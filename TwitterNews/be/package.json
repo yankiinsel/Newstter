@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "deploy": "now --public -e consumer_key=@consumer_key -e consumer_secret=@consumer_secret -e access_token_key=@access_token_key -e access_token_secret=@access_token_secret -e subscriptionkey=@subscriptionkey -e key2=@key2"
   },
   "author": "",
   "license": "ISC",
@@ -12,6 +13,7 @@
     "axios": "^0.18.0",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
+    "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "twitter": "^1.7.1"
   }

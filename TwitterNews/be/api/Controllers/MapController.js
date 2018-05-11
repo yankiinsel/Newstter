@@ -1,4 +1,4 @@
-const config = require('../config');
+const config = require('../Config.js');
 const Twitter = require('twitter');
 
 exports.getAvailableTrends = (req,res) => {

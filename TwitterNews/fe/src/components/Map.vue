@@ -4,12 +4,12 @@
     <div class="topics">
 
       <div class="ammap" id="mymap">
-        <h2>Select A Country</h2>
+        <h2>1. Select A Country</h2>
         <div id="mapdiv" style="width: %100; height: 450px;"></div>
       </div>
 
       <ul class="trending" id="mytopics">
-        <h2>Choose A Topic</h2>
+        <h2>2. Choose A Topic</h2>
         <li v-for="topic in topics" :key="topic">
           <b-button class="buttonlink" variant="'link'"
           :style="{ fontSize: 5*Math.log(parseInt(topic.tweet_volume)) / Math.log(7) + 'px'}"
@@ -19,6 +19,7 @@
       </ul>
 
       <ul class="news" id="mynews">
+        <h2>3. Read The News</h2>
         <li class="newsCell" v-for="newItem in news" :key="newItem">
           <a :href="newItem.url" class="title"> {{ newItem.name }} </a>
           <p class="description"> {{ newItem.description }} </p>
@@ -63,7 +64,7 @@ export default {
         easing: 'ease-in ',
         offset: 0,
       },
-      colors: ['red', 'blue', 'green', 'black', 'gray'],
+      baseURL: 'https://twitter-news-be.now.sh',
     };
   },
 
@@ -185,7 +186,7 @@ export default {
 
     async getAvailablePlaces() {
       this.posts = [];
-      await axios.get('http://localhost:3001/map').then((res) => {
+      await axios.get(`${this.baseURL}/map`).then((res) => {
         res.data.forEach((place) => {
           this.posts.push({
             name: place.name,
@@ -215,7 +216,7 @@ export default {
     async searchTopics(woeid) {
       const topics = [];
 
-      await axios.get(`http://localhost:3001/topics/${woeid}`)
+      await axios.get(`${this.baseURL}/topics/${woeid}`)
         .then((res) => {
           if (res.data.error !== undefined) {
             this.topics = [];
@@ -249,7 +250,7 @@ export default {
         .replace(/#/g, '')
         .toLowerCase();
       console.log('Searched for: '.concat(term));
-      axios.get(`http://localhost:3001/news/${term}/${this.picked.code}`).then((res) => {
+      axios.get(`${this.baseURL}/news/${term}/${this.picked.code}`).then((res) => {
         const news = res.data.value;
         console.log('Found items: '.concat(news.length));
         news.forEach((newsItem) => {
