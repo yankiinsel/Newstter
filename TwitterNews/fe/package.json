@@ -17,6 +17,8 @@
     "amcharts3": "github:amcharts/amcharts3",
     "ammap3": "^3.21.12",
     "axios": "^0.18.0",
+    "bootstrap": "^4.1.1",
+    "bootstrap-vue": "^2.0.0-rc.9",
     "twit": "^2.2.9",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",

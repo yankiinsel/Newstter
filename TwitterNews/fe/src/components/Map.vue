@@ -3,28 +3,22 @@
 
     <div class="topics">
 
-      <div class="ammap">
-        <div id="mapdiv" style="width: 1000px; height: 450px;"></div>
-        <div style="width: 1000px; font-size: 70%; padding: 5px 0; text-align: center; background-color: #535364; margin-top: 1px; color: #B4B4B7;"><a href="https://www.amcharts.com/visited_countries/" style="color: #B4B4B7;">Create your own visited countries map</a> or check out the <a href="https://www.amcharts.com/" style="color: #B4B4B7;">JavaScript Charts</a>.</div>
+      <div class="ammap" id="mymap">
+        <h2>Select A Country</h2>
+        <div id="mapdiv" style="width: %100; height: 450px;"></div>
       </div>
 
-      <ul class="trending">
+      <ul class="trending" id="mytopics">
+        <h2>Choose A Topic</h2>
         <li v-for="topic in topics" :key="topic">
-          <a v-on:click="getNews(topic)"
-          v-scroll-to="{
-            container: '#news',
-            duration: 500,
-            easing: 'linear',
-            offset: -200,
-            cancelable: true,
-            x: false,
-            y: true
-          }">{{ topic }}</a>
+          <b-button class="buttonlink" variant="'link'"
+          :style="{ fontSize: 5*Math.log(parseInt(topic.tweet_volume)) / Math.log(7) + 'px'}"
+              v-on:click="getNews(topic)">{{ topic.name }}</b-button>
           <br>
         </li>
       </ul>
 
-      <ul class="news">
+      <ul class="news" id="mynews">
         <li class="newsCell" v-for="newItem in news" :key="newItem">
           <a :href="newItem.url" class="title"> {{ newItem.name }} </a>
           <p class="description"> {{ newItem.description }} </p>
@@ -51,6 +45,8 @@ import 'ammap3/ammap/maps/js/worldLow';
 
 import axios from 'axios';
 
+const VueScrollTo = require('vue-scrollto');
+
 export default {
   name: 'Map',
   data() {
@@ -63,6 +59,11 @@ export default {
       picked: { id: 0, code: 'en-us' },
       map: '',
       selected: [],
+      options: {
+        easing: 'ease-in ',
+        offset: 0,
+      },
+      colors: ['red', 'blue', 'green', 'black', 'gray'],
     };
   },
 
@@ -196,7 +197,7 @@ export default {
           });
         });
       }).catch((err) => {
-        this.posts = [err];
+        console.log(err);
       });
     },
 
@@ -216,17 +217,21 @@ export default {
 
       await axios.get(`http://localhost:3001/topics/${woeid}`)
         .then((res) => {
+          if (res.data.error !== undefined) {
+            this.topics = [];
+            return;
+          }
           res.data.forEach((place) => {
             for (let i = 0, len = place.trends.length; i < len; i += 1) {
-              if (!topics.includes(place.trends[i].name)) {
-                topics.push(place.trends[i].name);
+              if (!topics.includes(place.trends[i])) {
+                topics.push(place.trends[i]);
               }
             }
-            this.topics = topics;
           });
+          this.topics = topics;
         })
         .catch((err) => {
-          this.topics = [err];
+          console.log(err);
         });
     },
 
@@ -234,11 +239,12 @@ export default {
       this.topics = [];
       const promises = this.woeids.map(this.searchTopics);
       await Promise.all(promises);
+      VueScrollTo.scrollTo('#mytopics', 500, this.options);
     },
 
     getNews(topic) {
       this.news = [];
-      const term = topic
+      const term = topic.name
         .replace(/([A-Z])/g, ' $1')
         .replace(/#/g, '')
         .toLowerCase();
@@ -249,6 +255,7 @@ export default {
         news.forEach((newsItem) => {
           this.news.push(newsItem);
         });
+        VueScrollTo.scrollTo('#mynews', 500, this.options);
       }).catch((err) => {
         console.log(err);
       });
@@ -293,6 +300,7 @@ export default {
   background-color: #30303d;
   color: #fff;
   grid-area: ammap;
+  margin: 0 auto;
 }
 
 .news {
@@ -329,12 +337,32 @@ ul.news li a { margin: 24px; display: block; width: 100%; height: 100%; }
   margin: 24px;
 }
 
+.buttonlink:hover {
+    color: rgb(150, 219, 185) !important;
+    text-decoration: none;
+}
+
+.buttonlink {
+  color: #42b983;
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+.buttonlink:focus {
+  outline: none !important;
+}
+
 .title {
   grid-area: title;
 }
 
 .description {
   grid-area: description;
+}
+
+h2 {
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
 </style>

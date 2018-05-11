@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <h1>Twitter News</h1>
+    <div>
+      <!-- As a heading -->
+      <b-navbar class="navbar-gradient" type="dark" variant="info">
+        <b-navbar-brand tag="h1" class="mb-0">TwitterNews</b-navbar-brand>
+      </b-navbar>
+    </div>
     <router-view/>
   </div>
 </template>
@@ -19,7 +24,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 
 h1, h2 {
@@ -36,4 +40,5 @@ li {
 a {
   color: #42b983;
 }
+
 </style>
