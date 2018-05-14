@@ -21,19 +21,21 @@
         </li>
       </ul>
 
-      <ul class="news" id="mynews">
+      <div class="newsList" id="mynews">
         <h2  v-if="news.length > 0">3. Read The News</h2>
-        <li class="newsCell" v-for="newItem in news" :key="newItem">
-          <a :href="newItem.url" class="title"> {{ newItem.name }} </a>
-          <p class="description"> {{ newItem.description }} </p>
-          <div class="thumbnail">
-            <img v-if="newItem.image !== undefined"
-                :src="newItem.image.thumbnail.contentUrl"
-                :alt="newItem.name">
-          </div>
-          <br>
-        </li>
-      </ul>
+        <ul class="news">
+          <li class="newsCell" v-for="newItem in news" :key="newItem">
+            <a :href="newItem.url" class="title"> {{ newItem.name }} </a>
+            <p class="description"> {{ newItem.description }} </p>
+            <div class="thumbnail">
+              <img v-if="newItem.image !== undefined"
+                  :src="newItem.image.thumbnail.contentUrl"
+                  :alt="newItem.name">
+            </div>
+            <br>
+          </li>
+        </ul>
+      </div>
 
     </div>
   </div>
@@ -130,7 +132,6 @@ export default {
     drawMap() {
       /* global AmCharts */
       // AmCharts.theme = AmCharts.themes.dark;
-
       // build map
       const map = new AmCharts.AmMap();
       this.map = map;
@@ -145,10 +146,10 @@ export default {
       this.map.areasSettings = {
         autoZoom: true,
         selectedColor: '#ff0084',
-        color: '#6699ff',
+        color: '#96dbb9',
         outlineColor: '#fff',
         outlineAlpha: 0.5,
-        rollOverColor: '#002266',
+        rollOverColor: '#42b983',
         rollOverOutlineColor: '#FFFFFF',
       };
       this.map.zoomControl = {
@@ -279,13 +280,14 @@ export default {
   grid-template:  " ammap     " auto
                   " trending  " auto
                   " news      " auto
-                  / 1fr
-
+                  / 1fr;
 }
 .trending {
   grid-area: trending;
   background-color: #30303d;
   color: #fff;
+  padding-bottom: 48px;
+  margin: 0;
 }
 
 #chartdiv {
@@ -308,29 +310,37 @@ export default {
   height: 100%;
 }
 
+.newsList {
+  background-color: #f0f0f0;
+}
+
 .news {
   display: grid;
   grid-area: news;
-  grid-auto-rows: 200px;
+  grid-auto-rows: auto;
   grid-gap: 20px;
 }
 
-ul.news li { padding: 0px;   border-bottom: 1px solid green;
+ul.news li {
+  margin-left: 32px;
+  margin-right: 32px;
+  padding: 8px;
+  background-color: #fff;
 }
 
 ul.news li a { margin: 24px; display: block; width: 100%; height: 100%; }
 
 .newsCell {
   display: grid;
-  grid-template: " thumbnail  title       " auto
+  grid-template: " thumbnail    title       " auto
                  " thumbnail  description " auto
-                 / auto      1fr;
+                 / auto         1fr;
   text-align: left;
 }
 
 .thumbnail {
   grid-area: thumbnail;
-  overflow:hidden;
+  overflow: hidden;
   object-fit: cover;
  }
 
@@ -346,7 +356,7 @@ ul.news li a { margin: 24px; display: block; width: 100%; height: 100%; }
 }
 
 .buttonlink {
-  color: #42b983;
+  color: #42b983 !important;
   margin-top: 1px;
   margin-bottom: 1px;
   background-color: transparent;
@@ -362,6 +372,9 @@ ul.news li a { margin: 24px; display: block; width: 100%; height: 100%; }
 
 .description {
   grid-area: description;
+  margin-left: 24px;
+  margin-top: 24px;
+
 }
 
 h2 {

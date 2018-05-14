@@ -2,11 +2,9 @@
   <div id="app">
     <div>
       <!-- As a heading -->
-      <b-navbar class="navbar-gradient" type="dark" variant="info">
-        <b-navbar-brand tag="h1" class="mb-0">
-          <img src="./assets/title.png" class="align-center" alt="newstter">
-        </b-navbar-brand>
-      </b-navbar>
+      <div class="navbar">
+          <img src="./assets/title.png" class="logo" alt="newstter">
+      </div>
     </div>
     <router-view/>
   </div>
@@ -26,6 +24,11 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  overflow: auto;
+}
+
+.navbar {
+  background-color: #30303d !important;
 }
 
 h1, h2 {
@@ -37,10 +40,15 @@ ul {
 }
 li {
   display: inline-block;
-  margin: 0 10px;
+  margin: 0px;
 }
 a {
   color: #42b983;
 }
+a:hover {
+  color: rgb(150, 219, 185);
+  text-decoration: none;
+}
+
 
 </style>
