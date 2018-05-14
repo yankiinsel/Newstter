@@ -5,11 +5,14 @@
 
       <div class="ammap" id="mymap">
         <h2>1. Select A Country</h2>
-        <div id="mapdiv" style="width: %100; height: 450px;"></div>
+        <div class="chartwrapper">
+          <div id="chartdiv" class="chartdiv"></div>
+        </div>
       </div>
 
-      <ul class="trending" id="mytopics">
-        <h2>2. Choose A Topic</h2>
+      <ul class="trending" id="mytopics" v-if="topics.length > 0">
+        <h2 v-if="errors.length > 0">{{errors[0].error}}</h2>
+        <h2 v-else>2. Choose A Topic</h2>
         <li v-for="topic in topics" :key="topic">
           <b-button class="buttonlink" variant="'link'"
           :style="{ fontSize: 5*Math.log(parseInt(topic.tweet_volume)) / Math.log(7) + 'px'}"
@@ -19,7 +22,7 @@
       </ul>
 
       <ul class="news" id="mynews">
-        <h2>3. Read The News</h2>
+        <h2  v-if="news.length > 0">3. Read The News</h2>
         <li class="newsCell" v-for="newItem in news" :key="newItem">
           <a :href="newItem.url" class="title"> {{ newItem.name }} </a>
           <p class="description"> {{ newItem.description }} </p>
@@ -59,11 +62,13 @@ export default {
       selectedTopic: '',
       picked: { id: 0, code: 'en-us' },
       map: '',
-      selected: [],
+      selected: '',
       options: {
         easing: 'ease-in ',
         offset: 0,
+        delay: 1,
       },
+      errors: [],
       baseURL: 'https://twitter-news-be.now.sh',
     };
   },
@@ -76,8 +81,8 @@ export default {
     },
 
     selected: function() {
-      console.log(this.selected);
-      const el = this.selected[0]
+
+      const el = this.selected
       if (el === 'TR') {//turkey
         this.picked = {id: 23424969, code: 'tr-tr'}
       } else if (el === 'CA') {//canada
@@ -124,64 +129,48 @@ export default {
 
     drawMap() {
       /* global AmCharts */
-      AmCharts.theme = AmCharts.themes.dark;
+      // AmCharts.theme = AmCharts.themes.dark;
 
       // build map
       const map = new AmCharts.AmMap();
       this.map = map;
       this.map.type = 'map';
-      this.map.theme = 'dark';
+      this.map.theme = 'light';
       this.map.projection = 'miller';
-      this.map.color = 'white';
+      this.map.color = 'black';
       this.map.dataProvider = {
         map: 'worldLow',
         getAreasFromMap: true,
       };
       this.map.areasSettings = {
-        autoZoom: false,
-        selectedColor: '#AAEE66',
-        selectable: true,
-        color: '#fff',
-        outlineColor: '#30303d',
-        outlineAlpha: 0.2,
+        autoZoom: true,
+        selectedColor: '#ff0084',
+        color: '#6699ff',
+        outlineColor: '#fff',
+        outlineAlpha: 0.5,
+        rollOverColor: '#002266',
+        rollOverOutlineColor: '#FFFFFF',
       };
       this.map.zoomControl = {
         zoomControlEnabled: true,
+        maxZoomLevel: 10,
+        zoomOnDoubleClick: false,
       };
       this.map.listeners = [{
         event: 'clickMapObject',
-        method: (e) => {
+        method: (event) => {
           // Ignore any click not on area
-          if (e.mapObject.objectType !== 'MapArea') {
+          if (event.mapObject.objectType !== 'MapArea') {
             return;
           }
-          const area = e.mapObject;
-          // Toggle showAsSelected
-          // for (let i = 0; i < this.map.dataProvider.areas.length; i += 1) {
-          //   this.map.dataProvider.areas[i].showAsSelected = false;
-          // }
-          // area.showAsSelected = true;
-          area.showAsSelected = !area.showAsSelected;
-          e.chart.returnInitialColor(area);
-          // Update the list
-          this.selected = this.getSelectedCountries();
+          this.selected = event.mapObject.id;
         },
       }];
       this.map.export = {
         enabled: true,
         position: 'bottom right',
       };
-      this.map.write('mapdiv');
-    },
-
-    getSelectedCountries() {
-      const selected = [];
-      for (let i = 0; i < this.map.dataProvider.areas.length; i += 1) {
-        if (this.map.dataProvider.areas[i].showAsSelected) {
-          selected.push(this.map.dataProvider.areas[i].id);
-        }
-      }
-      return selected;
+      this.map.write('chartdiv');
     },
 
     async getAvailablePlaces() {
@@ -198,7 +187,7 @@ export default {
           });
         });
       }).catch((err) => {
-        console.log(err);
+        this.errors.push({ error: err });
       });
     },
 
@@ -232,7 +221,7 @@ export default {
           this.topics = topics;
         })
         .catch((err) => {
-          console.log(err);
+          this.errors.push({ error: err });
         });
     },
 
@@ -240,7 +229,7 @@ export default {
       this.topics = [];
       const promises = this.woeids.map(this.searchTopics);
       await Promise.all(promises);
-      VueScrollTo.scrollTo('#mytopics', 500, this.options);
+      // VueScrollTo.scrollTo('#mytopics', 500, this.options);
     },
 
     getNews(topic) {
@@ -249,16 +238,16 @@ export default {
         .replace(/([A-Z])/g, ' $1')
         .replace(/#/g, '')
         .toLowerCase();
-      console.log('Searched for: '.concat(term));
+
       axios.get(`${this.baseURL}/news/${term}/${this.picked.code}`).then((res) => {
         const news = res.data.value;
-        console.log('Found items: '.concat(news.length));
+
         news.forEach((newsItem) => {
           this.news.push(newsItem);
         });
         VueScrollTo.scrollTo('#mynews', 500, this.options);
       }).catch((err) => {
-        console.log(err);
+        this.errors.push({ error: err });
       });
     },
   },
@@ -277,9 +266,9 @@ export default {
   justify-content: center;
   align-items: center;
 
-  grid-template: 1fr / 1fr 80% 1fr;
+  grid-template: 1fr / 1fr;
   grid-template-areas:
-    ".  topics ."
+    "topics"
 }
 
 .topics {
@@ -295,13 +284,28 @@ export default {
 }
 .trending {
   grid-area: trending;
-}
-
-#mapdiv {
   background-color: #30303d;
   color: #fff;
+}
+
+#chartdiv {
+  color: #30303d;
+  background-color: #fff;
   grid-area: ammap;
   margin: 0 auto;
+}
+
+.chartwrapper {
+  width: 100%;
+  position: relative;
+  padding-bottom: 50%;
+  box-sizing: border-box;
+}
+
+.chartdiv {
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .news {
@@ -309,8 +313,6 @@ export default {
   grid-area: news;
   grid-auto-rows: 200px;
   grid-gap: 20px;
-  border-top: 1px solid green;
-
 }
 
 ul.news li { padding: 0px;   border-bottom: 1px solid green;
@@ -320,9 +322,9 @@ ul.news li a { margin: 24px; display: block; width: 100%; height: 100%; }
 
 .newsCell {
   display: grid;
-  grid-template: " thumbnail  title       " 48px
-                 " thumbnail  description " 128px
-                 / 176px      1fr;
+  grid-template: " thumbnail  title       " auto
+                 " thumbnail  description " auto
+                 / auto      1fr;
   text-align: left;
 }
 
@@ -347,6 +349,7 @@ ul.news li a { margin: 24px; display: block; width: 100%; height: 100%; }
   color: #42b983;
   margin-top: 1px;
   margin-bottom: 1px;
+  background-color: transparent;
 }
 
 .buttonlink:focus {

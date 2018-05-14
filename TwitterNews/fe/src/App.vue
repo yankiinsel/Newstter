@@ -3,7 +3,9 @@
     <div>
       <!-- As a heading -->
       <b-navbar class="navbar-gradient" type="dark" variant="info">
-        <b-navbar-brand tag="h1" class="mb-0">TwitterNews</b-navbar-brand>
+        <b-navbar-brand tag="h1" class="mb-0">
+          <img src="./assets/title.png" class="align-center" alt="newstter">
+        </b-navbar-brand>
       </b-navbar>
     </div>
     <router-view/>
