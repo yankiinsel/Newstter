@@ -29,6 +29,11 @@ export default {
 
 .navbar {
   background: linear-gradient(to right,#30303d , #660066);
+  height: 64px;
+}
+
+img.logo {
+  height: 48px !important;
 }
 
 h1, h2 {
