@@ -28,7 +28,7 @@ export default {
 }
 
 .navbar {
-  background-color: #30303d !important;
+  background: linear-gradient(to right,#30303d , #660066);
 }
 
 h1, h2 {
