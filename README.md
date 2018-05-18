@@ -16,6 +16,29 @@ It should be able to complete each task step by step according to the users manu
 2. Select A Topic
 3. Read The News
 
-![Map](https://github.com/yankiinsel/yanki-swe573/blob/master/map.png)
-![Topics](https://github.com/yankiinsel/yanki-swe573/blob/master/topics.png)
-![News](https://github.com/yankiinsel/yanki-swe573/blob/master/news.png)
+![Map](https://github.com/yankiinsel/yanki-swe573/blob/master/assets/map.png)
+![Topics](https://github.com/yankiinsel/yanki-swe573/blob/master/assets/topics.png)
+![News](https://github.com/yankiinsel/yanki-swe573/blob/master/assets/news.png)
+
+## Available Countries
+
+Turkey
+Canada
+USA
+Great Britain
+Mexico
+Ireland
+France
+Germany
+Italy
+Netherlands
+Spain
+Russia
+Australia
+Japan
+Korea
+India
+Egypt
+Saudi Arabia
+Brazil
+Indonesia
