@@ -4,25 +4,26 @@
     <div class="topics">
 
       <div class="ammap" id="mymap">
-        <h2>1. Select A Country</h2>
+        <h2>1. Select A Country.</h2>
         <div class="chartwrapper">
           <div id="chartdiv" class="chartdiv"></div>
         </div>
       </div>
 
-      <ul class="trending" id="mytopics" v-if="topics.length > 0">
-        <h2 v-if="errors.length > 0">{{errors[0].error}}</h2>
+      <ul class="trending" id="mytopics">
+        <h2 v-if="!didFindTopics"> Rate limit exceeded</h2>
         <h2 v-else>2. Choose A Topic</h2>
         <li v-for="topic in topics" :key="topic">
           <b-button class="buttonlink" variant="'link'"
           :style="{ fontSize: 5*Math.log(parseInt(topic.tweet_volume)) / Math.log(7) + 'px'}"
-              v-on:click="getNews(topic)">{{ topic.name }}</b-button>
+              v-on:click="getNews(topic,true)">{{ topic.name }}</b-button>
           <br>
         </li>
       </ul>
 
       <div class="newsList" id="mynews">
         <h2  v-if="news.length > 0">3. Read The News</h2>
+        <h2  v-if="!didFindNews">No news have been found :(</h2>
         <ul class="news">
           <li class="newsCell" v-for="newItem in news" :key="newItem">
             <a :href="newItem.url" class="title"> {{ newItem.name }} </a>
@@ -66,12 +67,14 @@ export default {
       map: '',
       selected: '',
       options: {
-        easing: 'ease-in ',
+        easing: 'ease-in-out',
         offset: 0,
-        delay: 1,
+        cancellable: true,
       },
-      errors: [],
-      baseURL: 'https://twitter-news-be.now.sh',
+      didFindNews: true,
+      didFindTopics: true,
+      baseURL: 'https://twitter-news.now.sh',
+
     };
   },
 
@@ -96,7 +99,7 @@ export default {
       } else if (el === 'GB') {//great britain
         this.picked = {id: 23424975, code: 'en-gb'}
       } else if (el === 'MX') {//mexico
-        this.picked = {id: 23424900, code: 'en-mx'}
+        this.picked = {id: 23424900, code: 'es-mx'}
       } else if (el === 'IE') {//ireland
         this.picked = {id: 23424803, code: 'en-ie'}
       } else if (el === 'FR') {//france
@@ -111,6 +114,22 @@ export default {
         this.picked = {id: 23424950, code: 'es-es'}
       } else if (el === 'RU') {//russia
         this.picked = {id: 23424936, code: 'ru-ru'}
+      } else if (el === 'AU') {//australia
+        this.picked = {id: 23424748, code: 'en-au'}
+      } else if (el === 'JP') {//japan
+        this.picked = {id: 23424856, code: 'ja-jp'}
+      } else if (el === 'KR' || el === 'KP') {//korea
+        this.picked = {id: 23424868, code: 'ko-kr'}
+      } else if (el === 'IN') {//india
+        this.picked = {id: 23424848, code: 'en-in'}
+      } else if (el === 'EG') {//egypt
+        this.picked = {id: 23424802, code: 'ar-sa'}
+      } else if (el === 'SA') {//saudi
+        this.picked = {id: 23424938, code: 'ar-sa'}
+      } else if (el === 'BR') {//brazil
+        this.picked = {id: 23424768, code: 'pt-br'}
+      } else if (el === 'ID') {//indonesia
+        this.picked = {id: 23424846, code: 'en-id'}
       }
     }
     /* eslint-enable */
@@ -177,6 +196,10 @@ export default {
     async getAvailablePlaces() {
       this.posts = [];
       await axios.get(`${this.baseURL}/map`).then((res) => {
+        if (typeof res.data === 'undefined') {
+          this.didFindTopics = false;
+          return;
+        }
         res.data.forEach((place) => {
           this.posts.push({
             name: place.name,
@@ -187,8 +210,7 @@ export default {
             countryCode: place.countryCode,
           });
         });
-      }).catch((err) => {
-        this.errors.push({ error: err });
+        this.didFindTopics = true;
       });
     },
 
@@ -201,6 +223,7 @@ export default {
         }
       }
       this.woeids = woeids;
+      this.didFindTopics = true;
     },
 
     async searchTopics(woeid) {
@@ -208,8 +231,8 @@ export default {
 
       await axios.get(`${this.baseURL}/topics/${woeid}`)
         .then((res) => {
-          if (res.data.error !== undefined) {
-            this.topics = [];
+          if (typeof res.data.errors !== 'undefined') {
+            this.didFindTopics = false;
             return;
           }
           res.data.forEach((place) => {
@@ -220,9 +243,7 @@ export default {
             }
           });
           this.topics = topics;
-        })
-        .catch((err) => {
-          this.errors.push({ error: err });
+          this.didFindTopics = true;
         });
     },
 
@@ -230,25 +251,34 @@ export default {
       this.topics = [];
       const promises = this.woeids.map(this.searchTopics);
       await Promise.all(promises);
-      // VueScrollTo.scrollTo('#mytopics', 500, this.options);
+      VueScrollTo.scrollTo('#mytopics', 2000, this.options);
     },
 
-    getNews(topic) {
+    getNews(topic, isFirstSearch) {
       this.news = [];
-      const term = topic.name
-        .replace(/([A-Z])/g, ' $1')
+      let term = topic.name
         .replace(/#/g, '')
+        .replace(/_/g, ' ')
         .toLowerCase();
-
+      if (isFirstSearch) {
+        term = term
+          .replace(/([A-Z])/g, ' $1');
+      }
       axios.get(`${this.baseURL}/news/${term}/${this.picked.code}`).then((res) => {
         const news = res.data.value;
-
+        if (news.length === 0) {
+          if (isFirstSearch) {
+            this.getNews(topic, false);
+          } else {
+            this.didFindNews = false;
+          }
+          return;
+        }
         news.forEach((newsItem) => {
           this.news.push(newsItem);
         });
-        VueScrollTo.scrollTo('#mynews', 500, this.options);
-      }).catch((err) => {
-        this.errors.push({ error: err });
+        this.didFindNews = true;
+        VueScrollTo.scrollTo('#mynews', 1000, this.options);
       });
     },
   },
