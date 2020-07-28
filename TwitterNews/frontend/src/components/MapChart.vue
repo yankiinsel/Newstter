@@ -1,5 +1,6 @@
 <template>
 <div id="mapchart">
+  <h2 id="title">1. Select A Country.</h2>
   <div class="chartwrapper">
     <div id="chartdiv"></div>
   </div>
@@ -67,12 +68,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 
 <style lang = "scss">
-
-#mapchart {
-  display: grid;
-  grid-template: "map" auto
-                / 1fr;
-}
 
 #chartdiv {
   color: #30303d;

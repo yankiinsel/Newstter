@@ -1,8 +1,9 @@
 <template>
  <div class="newsList" id="mynews">
+    <h2 id="title">3. Read The News</h2>
     <ul class="news">
         <li class="newsCell" v-for="newsItem in news" :key="newsItem">
-        <a :href="newsItem.url" class="title"> {{ newsItem.name }} </a>
+        <a :href="newsItem.url" class="newsTitle"> {{ newsItem.name }} </a>
         <p class="description"> {{ newsItem.description }} </p>
         <div class="thumbnail">
             <img v-if="newsItem.image !== undefined"
@@ -57,7 +58,7 @@ ul.news li a { margin: 24px; display: block; width: 100%; height: 100%; }
 
 .newsCell {
   display: grid;
-  grid-template: " thumbnail  title       " auto
+  grid-template: " thumbnail  newsTitle   " auto
                  " thumbnail  description " auto
                  / auto         1fr;
   text-align: left;
@@ -75,8 +76,8 @@ ul.news li a { margin: 24px; display: block; width: 100%; height: 100%; }
   margin: 24px;
 }
 
-.title {
-  grid-area: title;
+.newsTitle {
+  grid-area: newsTitle;
 }
 
 .description {
