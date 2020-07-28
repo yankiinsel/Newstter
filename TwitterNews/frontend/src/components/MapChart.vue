@@ -1,30 +1,29 @@
 <template>
+<div id="mapchart">
   <div class="chartwrapper">
     <div id="chartdiv"></div>
   </div>
+</div>
+
 </template>
 
 <script>
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4maps from '@amcharts/amcharts4/maps';
 import am4geodataWorldLow from '@amcharts/amcharts4-geodata/worldLow';
+import { mapMutations } from 'vuex';
 
 export default {
   name: 'MapChart',
-  data() {
-    return {
-
-    };
-  },
-
-  watch: {
-  },
 
   async created() {
     this.drawMap();
   },
 
   methods: {
+    ...mapMutations([
+      'selectCountry',
+    ]),
 
     drawMap() {
       // High detail map
@@ -51,7 +50,7 @@ export default {
         ev.target.series.chart.zoomToMapObject(ev.target);
 
         // get object info
-        console.log(ev.target.dataItem.dataContext.name);
+        this.selectCountry(ev.target.dataItem.dataContext.name);
       });
 
       // Exclude antiarctica
@@ -69,14 +68,20 @@ export default {
 
 <style lang = "scss">
 
+#mapchart {
+  display: grid;
+  grid-template: "map" auto
+                / 1fr;
+}
+
 #chartdiv {
   color: #30303d;
   background-color: #fff;
-  grid-area: ammap;
   margin: 0 auto;
   position: absolute;
   width: 100%;
   height: 100%;
+  text-align: left;
 }
 
 .chartwrapper {
@@ -84,6 +89,8 @@ export default {
   position: relative;
   padding-bottom: 50%;
   box-sizing: border-box;
+  grid-area: map;
+
 }
 
 </style>

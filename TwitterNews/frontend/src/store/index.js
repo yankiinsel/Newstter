@@ -5,12 +5,12 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-
+    selectedCountry: '',
   },
   mutations: {
-
-  },
-  actions: {
-
+    selectCountry(state, country) {
+      // mutate state
+      this.state.selectedCountry = country;
+    },
   },
 });
