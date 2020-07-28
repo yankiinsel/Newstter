@@ -6,11 +6,14 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     selectedCountry: '',
+    trendingTopic: '',
   },
   mutations: {
     selectCountry(state, country) {
-      // mutate state
       this.state.selectedCountry = country;
+    },
+    setTrendingTopic(state, topic) {
+      this.state.trendingTopic = topic;
     },
   },
 });
