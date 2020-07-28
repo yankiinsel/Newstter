@@ -15,8 +15,7 @@
     "deploy": "npm run build && git add . && git commit -a -m 'Adding files.' && git push heroku master"
   },
   "dependencies": {
-    "amcharts3": "github:amcharts/amcharts3",
-    "ammap3": "^3.21.12",
+    "@amcharts/amcharts4": "^4.9.30",
     "autoprefixer": "^7.1.2",
     "axios": "^0.18.0",
     "babel-core": "^6.22.1",
