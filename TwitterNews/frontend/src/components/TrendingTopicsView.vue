@@ -3,7 +3,7 @@
       <ul class="trending" id="mytopics">
         <h2 v-if="!didFindTopics"> Rate limit exceeded</h2>
         <h2 v-else>2. Choose A Topic</h2>
-        <li v-for="topic in topics" :key="topic">
+        <li v-for="topic in topics" :key="topic.name">
           <b-button class="buttonlink" variant="'link'"
           :style="{ fontSize: 5*Math.log(parseInt(topic.tweet_volume)) / Math.log(7) + 'px'}"
               v-on:click="getNews(topic)">{{ topic.name }}</b-button>
@@ -15,6 +15,7 @@
 
 <script>
 import { mapMutations } from 'vuex';
+import topicsService from '../services/TopicsService';
 
 export default {
   name: 'TrendingTopicsView',
@@ -22,8 +23,19 @@ export default {
   data() {
     return {
       didFindTopics: true,
-      topics: [{ name: 'hello', tweet_volume: 1005 }, { name: 'world', tweet_volume: 500 }],
+      topics: [],
+      picked: '',
     };
+  },
+
+  created() {
+    // eslint-disable-next-line no-unused-vars
+    this.$store.watch(state => this.$store.state.selectedCountry,
+      (selectedCountry) => {
+        topicsService.getTopics(selectedCountry.id, (res) => {
+          this.topics = res.data[0].trends;
+        });
+      });
   },
 
   methods: {
@@ -35,7 +47,6 @@ export default {
       this.setTrendingTopic(topic);
     },
   },
-
 };
 </script>
 

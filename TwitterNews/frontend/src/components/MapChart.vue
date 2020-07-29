@@ -51,13 +51,20 @@ export default {
         ev.target.series.chart.zoomToMapObject(ev.target);
 
         // get object info
-        this.selectCountry(ev.target.dataItem.dataContext.name);
+        this.selectCountry(this.getCountryByName(ev.target.dataItem.dataContext.name));
       });
 
-      // Exclude antiarctica
+      // Exclude Antiarctica
       polygonSeries.exclude = ['AQ'];
 
       chart.zoomControl = new am4maps.ZoomControl();
+    },
+
+    getCountryByName(countryName) {
+      if (countryName === 'Turkey') {
+        return { id: 23424969, code: 'tr-tr' };
+      }
+      return '';
     },
   },
 

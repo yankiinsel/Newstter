@@ -3,8 +3,8 @@ import { baseURL } from '../common/config';
 
 const TopicsService = {
 
-  async getTopics(callback) {
-    const url = `${baseURL}/topics`;
+  async getTopics(countryId, callback) {
+    const url = `${baseURL}/topics/${countryId}`;
     await BaseService.get(url)
       .then((res) => {
         callback(res);

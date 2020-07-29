@@ -2,7 +2,7 @@
  <div class="newsList" id="mynews">
     <h2 id="title">3. Read The News</h2>
     <ul class="news">
-        <li class="newsCell" v-for="newsItem in news" :key="newsItem">
+        <li class="newsCell" v-for="newsItem in news" :key="newsItem.title">
         <a :href="newsItem.url" class="newsTitle"> {{ newsItem.name }} </a>
         <p class="description"> {{ newsItem.description }} </p>
         <div class="thumbnail">

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BaseService = {
+export default {
   async get(url) {
     return axios.get(url);
   },
@@ -18,5 +18,3 @@ const BaseService = {
       });
   },
 };
-
-export default BaseService;
