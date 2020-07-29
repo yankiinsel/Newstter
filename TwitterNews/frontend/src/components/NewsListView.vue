@@ -84,6 +84,6 @@ ul.news li a { margin: 24px; display: block; width: 100%; height: 100%; }
   grid-area: description;
   margin-left: 24px;
   margin-top: 24px;
-
 }
+
 </style>

@@ -51,7 +51,7 @@ export default {
 </script>
 
 <style>
-.trending {
+#trending-topics {
   grid-area: trending;
   background-color: #30303d;
   color: #fff;
@@ -70,9 +70,11 @@ export default {
   margin-top: 1px;
   margin-bottom: 1px;
   background-color: transparent;
+  border: none;
 }
 
 .buttonlink:focus {
   outline: none !important;
 }
+
 </style>

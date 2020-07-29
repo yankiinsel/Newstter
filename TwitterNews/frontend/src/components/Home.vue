@@ -24,7 +24,7 @@ export default {
 
 </script>
 
-<style>
+<style lang="scss">
 
 #home {
   width: 100%;
@@ -34,15 +34,6 @@ export default {
                  " trending  " auto
                  " news  " auto
                  / auto;
-  text-align: left;
-}
-
-#title1 {
-    grid-area: title1;
-}
-
-#title2 {
-    grid-area: title2;
 }
 
 map-chart {
@@ -61,4 +52,5 @@ h2 {
   margin-top: 50px;
   margin-bottom: 50px;
 }
+
 </style>

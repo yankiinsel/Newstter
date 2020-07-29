@@ -25,11 +25,18 @@ export default {
   text-align: center;
   color: #2c3e50;
   overflow: auto;
+  margin: 0px;
+}
+
+body {
+  margin:0;
 }
 
 .navbar {
   background: linear-gradient(to right,#30303d , #660066);
   height: 64px;
+  text-align: left;
+
 }
 
 img.logo {
