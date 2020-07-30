@@ -4,9 +4,15 @@
         <h2 v-if="!didFindTopics"> Rate limit exceeded</h2>
         <h2 v-else>2. Choose A Topic</h2>
         <li v-for="topic in topics" :key="topic.name">
-          <b-button class="buttonlink" variant="'link'"
-          :style="{ fontSize: 5*Math.log(parseInt(topic.tweet_volume)) / Math.log(7) + 'px'}"
-              v-on:click="getNews(topic)">{{ topic.name }}</b-button>
+          <b-button
+            class="buttonlink"
+            variant="'link'"
+            v-bind:style="{
+              fontSize: getFontSize(topic.tweet_volume)
+            }"
+            v-on:click="setTrendingTopic(topic)">
+            {{ topic.name }}
+          </b-button>
           <br>
         </li>
       </ul>
@@ -43,9 +49,11 @@ export default {
       'setTrendingTopic',
     ]),
 
-    getNews(topic) {
-      this.setTrendingTopic(topic);
+    getFontSize(volume) {
+      const retVal = `${5 * Math.log(parseInt(volume, 10)) / Math.log(7)}px`;
+      return retVal;
     },
+
   },
 };
 </script>

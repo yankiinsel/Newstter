@@ -1,7 +1,7 @@
 <template>
 <div id="mapchart">
   <h2 id="title">1. Select A Country.</h2>
-  <div class="chartwrapper">
+  <div id="chartwrapper">
     <div id="chartdiv"></div>
   </div>
 </div>
@@ -17,9 +17,16 @@ import { mapMutations } from 'vuex';
 export default {
   name: 'MapChart',
 
+  data() {
+    return {
+      selectedCountry: '',
+    };
+  },
+
   async created() {
     this.drawMap();
   },
+
 
   methods: {
     ...mapMutations([
@@ -46,9 +53,14 @@ export default {
       const hs = polygonTemplate.states.create('hover');
       hs.properties.fill = am4core.color('#367B25');
 
+      // Create active state
+      const as = polygonTemplate.states.create('active');
+      as.properties.fill = am4core.color('#7B3625');
+
       polygonTemplate.events.on('hit', (ev) => {
         // zoom to an object
-        ev.target.series.chart.zoomToMapObject(ev.target);
+        ev.target.series.chart.zoomToMapObject(ev.target, 3, true, 500);
+        this.highlightCountry(ev.target);
 
         // get object info
         this.selectCountry(this.getCountryByName(ev.target.dataItem.dataContext.name));
@@ -58,6 +70,15 @@ export default {
       polygonSeries.exclude = ['AQ'];
 
       chart.zoomControl = new am4maps.ZoomControl();
+      chart.zoomControl.slider.height = 100;
+    },
+
+    highlightCountry(country) {
+      if (this.selectedCountry.isActive) {
+        this.selectedCountry.isActive = false;
+      }
+      this.selectedCountry = country;
+      this.selectedCountry.isActive = true;
     },
 
     getCountryByName(countryName) {
@@ -85,13 +106,18 @@ export default {
   height: 100%;
 }
 
-.chartwrapper {
-  width: 100%;
+#chartwrapper {
   position: relative;
   padding-bottom: 50%;
-  box-sizing: border-box;
   grid-area: map;
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  }
 
-}
+  #chartdiv {
+    width: 90%;
+    height: 90%;
+  }
 
 </style>
