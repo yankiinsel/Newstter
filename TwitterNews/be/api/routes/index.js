@@ -11,7 +11,7 @@ module.exports = (app) => {
     app.route('/topics/:id')
         .get(topicsController.getTopics)
 
-    app.route('/news/:term/:country')
+    app.route('/news/:topic/:page')
         .get(newsController.getNews)
         
 };
