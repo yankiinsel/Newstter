@@ -36,6 +36,7 @@ export default {
     drawMap() {
       // High detail map
       const chart = am4core.create('chartdiv', am4maps.MapChart);
+      chart.chartContainer.wheelable = false;
       chart.geodata = am4geodataWorldLow;
       chart.projection = new am4maps.projections.Miller();
       const polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
@@ -113,11 +114,6 @@ export default {
   width: 100%;
   justify-content: center;
   display: flex;
-  }
-
-  #chartdiv {
-    width: 90%;
-    height: 90%;
   }
 
 </style>
