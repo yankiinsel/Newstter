@@ -3,12 +3,12 @@
     <h2 id="title">3. Read The News</h2>
     <ul class="news">
         <li class="newsCell" v-for="newsItem in news" :key="newsItem.title">
-        <a :href="newsItem.url" class="newsTitle"> {{ newsItem.name }} </a>
+        <a :href="newsItem.url" class="newsTitle"> {{ newsItem.title }} </a>
         <p class="description"> {{ newsItem.description }} </p>
         <div class="thumbnail">
-            <img v-if="newsItem.image !== undefined"
-                :src="newsItem.image.thumbnail.contentUrl"
-                :alt="newsItem.name">
+            <img v-if="newsItem.urlToImage !== undefined"
+                :src="newsItem.urlToImage"
+                :alt="newsItem.title">
         </div>
         <br>
         </li>
@@ -17,15 +17,31 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import newsService from '../services/NewsService';
 
 export default {
+
   name: 'NewsListView',
 
   data() {
     return {
-      news: [{ url: '123', name: 'Hello', description: 'World' }],
+      news: [],
     };
   },
+
+  watch: {
+    trendingTopic() {
+      newsService.getNews(this.trendingTopic.name, (res) => {
+        console.log(res.data.articles);
+        this.news = res.data.articles;
+      });
+    },
+  },
+
+  computed: mapState([
+    'trendingTopic',
+  ]),
 
   methods: {
 
@@ -58,8 +74,9 @@ ul.news li a { margin: 24px; display: block; width: 100%; height: 100%; }
 
 .newsCell {
   display: grid;
-  grid-template: " thumbnail  newsTitle   " auto
-                 " thumbnail  description " auto
+  grid-template: " newsTitle   " auto
+                 " thumbnail " auto
+                 " description " auto
                  / auto         1fr;
   text-align: left;
 }
@@ -68,10 +85,11 @@ ul.news li a { margin: 24px; display: block; width: 100%; height: 100%; }
   grid-area: thumbnail;
   overflow: hidden;
   object-fit: cover;
+  justify-items: center;
  }
 
 .thumbnail img {
-  width: 128px;
+  width: 80%;
   height: auto;
   margin: 24px;
 }

@@ -64,7 +64,7 @@ export default {
         this.highlightCountry(ev.target);
 
         // get object info
-        this.selectCountry(this.getCountryByName(ev.target.dataItem.dataContext.name));
+        this.selectCountry(this.getCountryById(ev.target.dataItem.dataContext.id));
       });
 
       // Exclude Antiarctica
@@ -82,11 +82,52 @@ export default {
       this.selectedCountry.isActive = true;
     },
 
-    getCountryByName(countryName) {
-      if (countryName === 'Turkey') {
-        return { id: 23424969, code: 'tr-tr' };
+    getCountryById(countryId) {
+      let picked = null;
+      if (countryId === 'TR') {
+        picked = { id: 23424969, code: 'tr-tr' };
+      } if (countryId === 'CA') { // canada
+        picked = { id: 23424775, code: 'en-ca' };
+      } else if (countryId === 'US') { // usa
+        picked = { id: 23424775, code: 'en-us' };
+      } else if (countryId === 'World') { // worldwide
+        picked = { id: 0, code: 'en-us' };
+      } else if (countryId === 'GB') { // great britain
+        picked = { id: 23424975, code: 'en-gb' };
+      } else if (countryId === 'MX') { // mexico
+        picked = { id: 23424900, code: 'es-mx' };
+      } else if (countryId === 'IE') { // ireland
+        picked = { id: 23424803, code: 'en-ie' };
+      } else if (countryId === 'FR') { // france
+        picked = { id: 23424819, code: 'fr-fr' };
+      } else if (countryId === 'DE') { // germany
+        picked = { id: 23424829, code: 'de-de' };
+      } else if (countryId === 'IT') { // ialy
+        picked = { id: 23424829, code: 'it-it' };
+      } else if (countryId === 'NL') { // netherlands
+        picked = { id: 23424829, code: 'nl-nl' };
+      } else if (countryId === 'ES') { // spain
+        picked = { id: 23424950, code: 'es-es' };
+      } else if (countryId === 'RU') { // russia
+        picked = { id: 23424936, code: 'ru-ru' };
+      } else if (countryId === 'AU') { // australia
+        picked = { id: 23424748, code: 'en-au' };
+      } else if (countryId === 'JP') { // japan
+        picked = { id: 23424856, code: 'ja-jp' };
+      } else if (countryId === 'KR' || countryId === 'KP') { // korea
+        picked = { id: 23424868, code: 'ko-kr' };
+      } else if (countryId === 'IN') { // india
+        picked = { id: 23424848, code: 'en-in' };
+      } else if (countryId === 'EG') { // egypt
+        picked = { id: 23424802, code: 'ar-sa' };
+      } else if (countryId === 'SA') { // saudi
+        picked = { id: 23424938, code: 'ar-sa' };
+      } else if (countryId === 'BR') { // brazil
+        picked = { id: 23424768, code: 'pt-br' };
+      } else if (countryId === 'ID') { // indonesia
+        picked = { id: 23424846, code: 'en-id' };
       }
-      return '';
+      return picked;
     },
   },
 

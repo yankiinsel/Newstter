@@ -30,9 +30,9 @@ export default {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template: " mapchart " auto
+  grid-template: " mapchart  " auto
                  " trending  " auto
-                 " news  " auto
+                 " news      " auto
                  / auto;
 }
 

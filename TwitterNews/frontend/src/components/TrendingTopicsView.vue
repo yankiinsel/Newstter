@@ -1,7 +1,7 @@
 <template>
     <div id="trending-topics">
       <ul class="trending" id="mytopics">
-        <h2 v-if="!didFindTopics"> Rate limit exceeded</h2>
+        <h2 v-if="!didFindTopics"> Selected country is currently unavailable</h2>
         <h2 v-else>2. Choose A Topic</h2>
         <li v-for="topic in topics" :key="topic.name">
           <b-button
@@ -30,7 +30,6 @@ export default {
     return {
       didFindTopics: true,
       topics: [],
-      picked: '',
     };
   },
 
@@ -38,9 +37,15 @@ export default {
     // eslint-disable-next-line no-unused-vars
     this.$store.watch(state => this.$store.state.selectedCountry,
       (selectedCountry) => {
-        topicsService.getTopics(selectedCountry.id, (res) => {
-          this.topics = res.data[0].trends;
-        });
+        try {
+          topicsService.getTopics(selectedCountry.id, (res) => {
+            this.topics = res.data[0].trends;
+            this.didFindTopics = true;
+          });
+        } catch {
+          this.didFindTopics = false;
+          this.topics = [];
+        }
       });
   },
 
