@@ -9,6 +9,6 @@ exports.getNews = (req, res) => {
     }).then(data => {
         res.json(data);
     }).catch(e => {
-        console.log(e);
+        res.json({status: 'nok', error: e});
     });
 };

@@ -1,42 +1,57 @@
 <template>
  <div class="newsList" id="mynews">
     <h2 class="title">3. Read The News</h2>
-    <ul class="news">
+    <ul v-if="success" class="news">
         <li class="newsCell" v-for="newsItem in news" :key="newsItem.title">
-        <h2  class="newsTitle">
-          <a :href="newsItem.url" rel="noopener noreferrer" target="_blank">{{ newsItem.title }}</a>
-        </h2>
-        <p class="description"> {{ newsItem.description }} </p>
-        <div class="thumbnail">
-            <img v-if="newsItem.urlToImage !== undefined"
-                :src="newsItem.urlToImage"
-                :alt="newsItem.title">
-        </div>
-        <br>
+          <h2  class="newsTitle">
+            <a :href="newsItem.url"
+                rel="noopener noreferrer"
+                target="_blank">{{ newsItem.title }}</a>
+          </h2>
+          <p class="description"> {{ newsItem.description }} </p>
+          <div class="thumbnail">
+              <img v-if="newsItem.urlToImage !== undefined"
+                  :src="newsItem.urlToImage"
+                  :alt="newsItem.title">
+          </div>
+          <br>
         </li>
     </ul>
+    <p v-else class="news">{{error}}</p>
+    <pagination v-if="news.length > 0" class="pagination"
+                v-bind:pageCount="pageCount"
+                v-bind:currentPage="currentPage"
+                @goToPage="goToPage"
+    ></pagination>
 </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import newsService from '../services/NewsService';
+import Pagination from './Pagination.vue';
+
 
 export default {
+
+  components: { Pagination },
 
   name: 'NewsListView',
 
   data() {
     return {
       news: [],
+      pageCount: 0,
+      currentPage: 1,
+      error: '',
+      success: true,
     };
   },
 
   watch: {
     trendingTopic() {
-      newsService.getNews(this.trendingTopic.name, (res) => {
-        this.news = res.data.articles;
-      });
+      this.currentPage = 1;
+      this.getNews();
     },
   },
 
@@ -45,6 +60,24 @@ export default {
   ]),
 
   methods: {
+    goToPage(page) {
+      this.currentPage = page;
+      this.getNews();
+    },
+
+    getNews() {
+      newsService.getNews(this.trendingTopic.name, this.currentPage, (res) => {
+        if (res.data.status === 'nok') {
+          this.news = [];
+          this.error = res.data.error.message;
+          this.success = false;
+          return;
+        }
+        this.success = true;
+        this.news = res.data.articles;
+        this.pageCount = Math.ceil(res.data.totalResults / 20);
+      });
+    },
   },
 
 };
@@ -55,9 +88,10 @@ export default {
 .newsList {
   background-color: #f0f0f0;
   display: grid;
-  grid-template: " title title  title " auto
-                 " .     news   .     " auto
-                 / 1fr   2fr    1fr;
+  grid-template: " title      title      title      " auto
+                 " .          news       .          " auto
+                 " pagination pagination pagination " auto
+                 / 1fr        2fr        1fr;
   justify-content: center;
   margin: 0 auto;
   width: 100%;
@@ -121,6 +155,10 @@ a:hover {
   grid-area: description;
   margin-left: 24px;
   margin-top: 24px;
+}
+
+.pagination {
+  grid-area: pagination;
 }
 
 </style>
