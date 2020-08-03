@@ -1,9 +1,11 @@
 <template>
  <div class="newsList" id="mynews">
-    <h2 id="title">3. Read The News</h2>
+    <h2 class="title">3. Read The News</h2>
     <ul class="news">
         <li class="newsCell" v-for="newsItem in news" :key="newsItem.title">
-        <a :href="newsItem.url" class="newsTitle"> {{ newsItem.title }} </a>
+        <h2  class="newsTitle">
+          <a :href="newsItem.url" rel="noopener noreferrer" target="_blank">{{ newsItem.title }}</a>
+        </h2>
         <p class="description"> {{ newsItem.description }} </p>
         <div class="thumbnail">
             <img v-if="newsItem.urlToImage !== undefined"
@@ -33,7 +35,6 @@ export default {
   watch: {
     trendingTopic() {
       newsService.getNews(this.trendingTopic.name, (res) => {
-        console.log(res.data.articles);
         this.news = res.data.articles;
       });
     },
@@ -44,7 +45,6 @@ export default {
   ]),
 
   methods: {
-
   },
 
 };
@@ -54,6 +54,17 @@ export default {
 
 .newsList {
   background-color: #f0f0f0;
+  display: grid;
+  grid-template: " title title  title " auto
+                 " .     news   .     " auto
+                 / 1fr   2fr    1fr;
+  justify-content: center;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.title {
+  grid-area: title;
 }
 
 .news {
@@ -61,16 +72,14 @@ export default {
   grid-area: news;
   grid-auto-rows: auto;
   grid-gap: 20px;
+  width: 768px;
 }
 
 ul.news li {
   margin-left: 32px;
   margin-right: 32px;
-  padding: 8px;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.5);
 }
-
-ul.news li a { margin: 24px; display: block; width: 100%; height: 100%; }
 
 .newsCell {
   display: grid;
@@ -89,9 +98,19 @@ ul.news li a { margin: 24px; display: block; width: 100%; height: 100%; }
  }
 
 .thumbnail img {
-  width: 80%;
+  width: 100%;
   height: auto;
-  margin: 24px;
+}
+
+a {
+  margin: 12px 12px;
+  display: block;
+  text-decoration: none;
+  color: #191b1af8;
+}
+a:hover {
+  color: rgba(92, 92, 92, 0.678);
+  text-decoration: none;
 }
 
 .newsTitle {

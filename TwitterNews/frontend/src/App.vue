@@ -54,6 +54,7 @@ li {
   display: inline-block;
   margin: 0px;
 }
+
 a {
   color: #42b983;
 }
@@ -61,6 +62,5 @@ a:hover {
   color: rgb(150, 219, 185);
   text-decoration: none;
 }
-
 
 </style>
