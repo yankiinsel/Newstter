@@ -18,24 +18,18 @@ export default {
 </script>
 
 <style lang="scss">
-
-html {
-  height: 100%;
-  min-height: 100%;
-  overflow-y: scroll;
-}
-
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  overflow: auto;
+  margin: 0px;
 }
 
 body {
-  min-height: 100%;
-  padding-bottom: 20px;
+  margin:0;
 }
 
 .navbar {
@@ -59,14 +53,6 @@ ul {
 li {
   display: inline-block;
   margin: 0px;
-}
-
-a {
-  color: #42b983;
-}
-a:hover {
-  color: rgb(150, 219, 185);
-  text-decoration: none;
 }
 
 </style>
