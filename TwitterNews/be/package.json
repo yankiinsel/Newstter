@@ -16,10 +16,8 @@
     "dotenv": "^5.0.1",
     "encoding": "^0.1.13",
     "express": "^4.17.1",
-    "node-fetch": "1.7.3",
     "mongoose": "^5.4.1",
     "netlify-lambda": "^2.0.1",
-    "newsapi": "^2.4.1",
     "serverless-http": "^2.5.0",
     "twitter": "^1.7.1"
   }
