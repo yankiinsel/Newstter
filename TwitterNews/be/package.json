@@ -4,8 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "deploy": "now --public -e consumer_key=@consumer_key -e consumer_secret=@consumer_secret -e access_token_key=@access_token_key -e access_token_secret=@access_token_secret -e key=@key"
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
