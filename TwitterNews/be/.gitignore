@@ -1,3 +1,4 @@
-node_modules
+node_modules/*
+!node_modules/newsApi/
 api/DevConfig.js
 functions

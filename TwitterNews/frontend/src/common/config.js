@@ -1,1 +1,1 @@
-export const baseURL = 'http://localhost:3001';
+export const baseURL = 'https://newstter-api.netlify.app/.netlify/functions/app';
