@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "deploy": "now --public -e consumer_key=@consumer_key -e consumer_secret=@consumer_secret -e access_token_key=@access_token_key -e access_token_secret=@access_token_secret -e subscriptionkey=@subscriptionkey -e key2=@key2 -e consumer_key2=@consumer_key2 -e consumer_secret2=@consumer_secret2 -e access_token_key2=@access_token_key2 -e access_token_secret2=@access_token_secret2"
+    "deploy": "now --public -e consumer_key=@consumer_key -e consumer_secret=@consumer_secret -e access_token_key=@access_token_key -e access_token_secret=@access_token_secret -e key=@key"
   },
   "author": "",
   "license": "ISC",

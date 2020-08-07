@@ -1,4 +1,4 @@
-const config = require('../DevConfig.js');
+const config = require('../Config.js');
 
 exports.getNews = (req, res) => {
     const NewsAPI = require('newsapi');
