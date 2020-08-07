@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "NODE_ENV=development ./node_modules/.bin/netlify-lambda serve .",
+    "build": "NODE_ENV=production ./node_modules/.bin/netlify-lambda build ."
   },
   "author": "",
   "license": "ISC",
@@ -13,9 +14,11 @@
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "dotenv": "^5.0.1",
-    "express": "^4.16.3",
+    "express": "^4.17.1",
     "mongoose": "^5.4.1",
+    "netlify-lambda": "^2.0.1",
     "newsapi": "^2.4.1",
+    "serverless-http": "^2.5.0",
     "twitter": "^1.7.1"
   }
 }
