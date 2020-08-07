@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 export default {
-  async get(url) {
-    return axios.get(url);
+  async get(url, params) {
+    return axios.get(url, params);
   },
 
   async post(url, payload) {

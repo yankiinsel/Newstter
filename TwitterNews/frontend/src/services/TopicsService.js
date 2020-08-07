@@ -4,8 +4,12 @@ import { baseURL } from '../common/config';
 const TopicsService = {
 
   async getTopics(countryId, callback) {
-    const url = `${baseURL}/topics/${countryId}`;
-    await BaseService.get(url)
+    const url = `${baseURL}/topics`;
+    await BaseService.get(url, {
+      params: {
+        countryId,
+      },
+    })
       .then((res) => {
         callback(res);
       }).catch((error) => {

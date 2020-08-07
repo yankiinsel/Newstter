@@ -8,10 +8,10 @@ module.exports = (app) => {
     app.route('/map')
         .get(mapController.getAvailableTrends)
 
-    app.route('/topics/:id')
+    app.route('/topics/')
         .get(topicsController.getTopics)
 
-    app.route('/news/:topic/:page')
+    app.route('/news/')
         .get(newsController.getNews)
         
 };

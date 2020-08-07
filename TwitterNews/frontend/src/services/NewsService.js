@@ -3,8 +3,13 @@ import { baseURL } from '../common/config';
 
 const NewsService = {
   async getNews(topic, page, callback) {
-    const url = `${baseURL}/news/${topic}/${page}`;
-    await BaseService.get(url)
+    const url = `${baseURL}/news`;
+    await BaseService.get(url, {
+      params: {
+        page,
+        topic,
+      },
+    })
       .then((res) => {
         callback(res);
       }).catch((error) => {

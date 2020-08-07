@@ -14,14 +14,15 @@ export default new Vuex.Store({
     },
     setTrendingTopic(state, topic) {
       // eslint-disable-next-line no-param-reassign
-      topic.name = topic.name
+      const trendingTopic = Object.assign({}, topic);
+      trendingTopic.name = trendingTopic.name
         .replace(/#/g, '')
         .replace(/_/g, ' ')
         .replace(/([A-Z][a-z0-9]+)/g, ' $1 ')
         .replace(/\s{2}/g, ' ')
         .trim()
         .toLowerCase();
-      this.state.trendingTopic = topic;
+      this.state.trendingTopic = trendingTopic;
     },
   },
 });
