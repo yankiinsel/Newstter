@@ -1,6 +1,5 @@
 module.exports = (app, router) => {
     // Bind the controller to the route
-    const mapController = require('../Controllers/MapController.js');
     const topicsController = require('../Controllers/TopicsController.js');
     const newsController = require('../Controllers/NewsController.js');
 
@@ -10,7 +9,6 @@ module.exports = (app, router) => {
         })
     })
 
-    router.get('/map', mapController.getAvailableTrends)
     router.get('/topics', topicsController.getTopics)
     router.get('/news', newsController.getNews)
 

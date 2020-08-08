@@ -15,5 +15,4 @@ app.use(bodyParser.json());
 // Binding our routes with the server instance
 routes(app, router);
 
-app.listen(PORT, () => console.log('App running @' + PORT));
 module.exports.handler = serverless(app);
