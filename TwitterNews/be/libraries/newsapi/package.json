@@ -31,7 +31,7 @@
   "bundleDependencies": false,
   "dependencies": {
     "core-js": "^3.6.5",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^3.1.1"
   },
   "deprecated": false,
   "description": "A node interface for News API from newsapi.org",
